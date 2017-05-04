@@ -750,16 +750,6 @@ function Designer.guiFontEditor()
 		yOffset = yOffset + checkboxLabel:GetTall() + yHalfBuffer
 	end
 	
-	--[[local fontExample = vgui.Create( "DLabel", frame )
-	fontExample:SetPos( 10, 30 )
-	fontExample:SetText("The fox does the things\nZee not Zed")
-	fontExample:SetFont( "DesignerTestFont" )
-	fontExample:SizeToContents()
-	fontExample.Think = function()
-		updateFont()
-		fontExample:SizeToContents()
-	end]]
-	
 	local str1 = "The fox does the things 123"
 	local str2 = "Its ZEE not ZED, Jesus..."
 	
