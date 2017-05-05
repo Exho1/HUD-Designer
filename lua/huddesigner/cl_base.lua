@@ -8,6 +8,7 @@ Designer = Designer or {}
 	- Save fonts?
 		- Saved with the project or seperately
 	- Ammo and health bars
+	- Option to remove certain default HUD parts
 	- Finish touching up the workflow parts 
 
 ]]
@@ -47,30 +48,33 @@ function Designer.initializeVars()
 		
 	}
 	
+	Designer.gamemodeSprites = {
+		-- The blue G for garrysmod
+		-- Red T for TTT
+		-- etc
+	
+	}
+	
 	Designer.stringFormats = {
 		["[GMD] Name"] = "%nick%",
 		["[GMD] Team"] = "%team%",
+		["[GMD] Health"] = "%health%",
 		["[GMD] Weapon"] = "%weapon%",
-		
-		--"[RP] Job" = "%job%",
-		--"[RP] Wallet" = "%cash%",
-		
-		
-		--"[TTT] Name" = "%nick%",
-		
-	
+		["[GMD] Ammo Max"] = "%ammo_m%",
+		["[GMD] Ammo Current"] = "%ammo_c%",
+		["[GMD] Ammo Reserve"] = "%armo_r%",
+		["[GMD] Armor"] = "%armor%",
 	}
 	
 	Designer.stringSubs = {
 		["%nick%"] = "LocalPlayer():Nick()",
-		["%team%"] = "LocalPlayer():Team()",
+		["%team%"] = "team.GetName(LocalPlayer():Team())",
+		["%health%"] = "LocalPlayer():Health()",
 		["%weapon%"] = "LocalPlayer():GetActiveWeapon():GetPrintName()",
-		["%ammom%"] = "LocalPlayer():GetActiveWeapon().Primary.ClipSize",
-		["%ammoc%"] = "LocalPlayer():GetActiveWeapon().Clip1()",
-		["%ammor%"] = "LocalPlayer():GetActiveWeapon().Ammo1()",
+		["%ammo_m%"] = "LocalPlayer():GetActiveWeapon().Primary.ClipSize",
+		["%ammo_c%"] = "LocalPlayer():GetActiveWeapon().Clip1()",
+		["%ammo_r%"] = "LocalPlayer():GetActiveWeapon().Ammo1()",
 		["%armor%"] = "LocalPlayer():Armor()",
-		
-		--"%%" = "%%",
 	
 	}
 	
