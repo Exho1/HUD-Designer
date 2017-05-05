@@ -507,10 +507,13 @@ function Designer.guiTextEditor()
 	
 	formatChoice.OnSelect = function( self, index, val )
 		local printName, strFormat = self:GetSelected()
-
+		
+		-- Append the formatting placeholder to the text
 		local txt = tostring(stringEntry:GetText())
 		stringEntry:SetText( txt .. strFormat )
-
+		
+		-- Call its OnChange function for continuity
+		stringEntry:OnChange()
 	end
 	
 	local label = vgui.Create( "DLabel", rightPnl )

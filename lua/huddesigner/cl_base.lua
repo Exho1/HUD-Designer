@@ -55,18 +55,18 @@ function Designer.initializeVars()
 	
 	}
 	
-	Designer.stringFormats = {
+	Designer.stringFormats = Designer.stringFormats or {
 		["[GMD] Name"] = "%nick%",
 		["[GMD] Team"] = "%team%",
 		["[GMD] Health"] = "%health%",
 		["[GMD] Weapon"] = "%weapon%",
 		["[GMD] Ammo Max"] = "%ammo_m%",
 		["[GMD] Ammo Current"] = "%ammo_c%",
-		["[GMD] Ammo Reserve"] = "%armo_r%",
+		["[GMD] Ammo Reserve"] = "%ammo_r%",
 		["[GMD] Armor"] = "%armor%",
 	}
 	
-	Designer.stringSubs = {
+	Designer.stringSubs = Designer.stringSubs or {
 		["%nick%"] = "LocalPlayer():Nick()",
 		["%team%"] = "team.GetName(LocalPlayer():Team())",
 		["%health%"] = "LocalPlayer():Health()",

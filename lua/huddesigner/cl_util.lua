@@ -11,6 +11,8 @@ function Designer.registerStringSub( printName, placeholder, code )
 	Designer.stringFormats[ printName ] = string.lower(placeholder)
 	Designer.stringSubs[string.lower(placeholder)] = code
 
+	print("Registered: ", printName)
+	
 end
 
 Designer.registerStringSub( "[TTT] Round State", "%ttt_round%", "L[ roundstate_string[GAMEMODE.round_state] ]" )
@@ -470,7 +472,7 @@ function Designer.formatString( str, bExecute )
 
 	-- Make sure this string has the placeholder char in it
 	if string.find( str, "%%" ) then
-	
+
 		-- Find all matches that resemble %whatever%
 		local iter = string.gmatch( str, percentSignPattern )
 		
@@ -490,7 +492,7 @@ function Designer.formatString( str, bExecute )
 			local code = Designer.stringSubs[ subString ]
 			
 			if code then
-				
+
 				-- This returns just the code for exporting to Lua
 				if !bExecute then
 					return code
@@ -505,16 +507,10 @@ function Designer.formatString( str, bExecute )
 				code = string.format("Designer.runtimeVars['%s'] = tostring(%s)", subString, code )
 				
 				-- Run the code
-				local err = RunString( code, "Designer", true )
+				local err = RunString( code, "Designer", false )
 				
-				local subValue
-				
-				if err then
-					print(ERR)
-					subValue = "[LUA ERROR] CHECK CONSOLE"
-				else
-					subValue = Designer.runtimeVars[subString]
-				end
+				-- It will return the result of the code OR the placeholder string if the result is nil
+				local subValue = Designer.runtimeVars[subString] or placeholder
 				
 				-- Grab the preceding string and following string
 				local front = string.sub( str, 1, startIndex - 1 )
