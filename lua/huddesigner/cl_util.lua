@@ -10,11 +10,11 @@ function Designer.registerStringSub( printName, placeholder, code )
 	
 	Designer.stringFormats[ printName ] = string.lower(placeholder)
 	Designer.stringSubs[string.lower(placeholder)] = code
-
-	print("Registered: ", printName)
 	
 end
 
+-- String substitutions and all that jazz, custom ones can be added below
+-- If an error occurs with the code, it'll just display the placeholder. 
 Designer.registerStringSub( "[TTT] Round State", "%ttt_round%", "L[ roundstate_string[GAMEMODE.round_state] ]" )
 Designer.registerStringSub( "[TTT] Round Time", "%ttt_time%", 'util.SimpleTime(math.max(0, GetGlobalFloat("ttt_round_end", 0) - CurTime()), "%02i:%02i")')
 Designer.registerStringSub( "[TTT] Role", "%ttt_role%", "L[LocalPlayer():GetRoleStringRaw()]")
@@ -508,6 +508,8 @@ function Designer.formatString( str, bExecute )
 				
 				-- Run the code
 				local err = RunString( code, "Designer", false )
+				
+				print(err)
 				
 				-- It will return the result of the code OR the placeholder string if the result is nil
 				local subValue = Designer.runtimeVars[subString] or placeholder
