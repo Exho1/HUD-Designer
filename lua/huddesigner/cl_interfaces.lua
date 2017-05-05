@@ -242,7 +242,7 @@ function Designer.guiMatSelector()
 	frame:SetSize( 450, 400 )
 	frame:Center()
 	frame:MakePopup()
-	frame:SetTitle( "Open Project" )
+	frame:SetTitle( "Texture Selector" )
 	frame.Think = Designer.guiThinkOverride
 	frame.OnClose = function( self )
 		if !saved then

@@ -8,6 +8,7 @@ Designer = Designer or {}
 	- Save fonts?
 		- Saved with the project or seperately
 	- Ammo and health bars
+	- Option to scale HUDs created within the editor
 	- Option to remove certain default HUD parts
 	- Finish touching up the workflow parts 
 
