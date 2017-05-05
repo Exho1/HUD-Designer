@@ -7,6 +7,7 @@ Designer = Designer or {}
 	To do:
 	- Save fonts?
 		- Saved with the project or seperately
+	- Ammo and health bars
 	- Finish touching up the workflow parts 
 
 ]]
@@ -86,6 +87,7 @@ function Designer.initializeVars()
 	
 	Designer.clipboard = {}
 	Designer.fonts = {}
+	Designer.runtimeVars = {}
 	
 	Designer.projectName = "UnnamedProject-" .. Designer.getWritableDate()
 	Designer.projectSaved = true
@@ -137,14 +139,16 @@ function Designer.renderCanvas( )
 			elseif data.type == "text" then
 				--local tbl = {type="text", x=x, y=y, font=font, text=text, color=color, xalign=xAlign}
 				
+				local drawnText = Designer.formatString( data.text, true ) 
+				
 				if data.xalign then
-					draw.DrawText( data.text, data.font, data.x, data.y, data.color, data.xalign) 
+					draw.DrawText( drawnText, data.font, data.x, data.y, data.color, data.xalign) 
 				else
 					
 					surface.SetFont( data.font )
 					surface.SetTextColor( Designer.unpackColor( data.color ) )
 					surface.SetTextPos( data.x, data.y )
-					surface.DrawText( data.text )
+					surface.DrawText( drawnText )
 				end
 				
 			end

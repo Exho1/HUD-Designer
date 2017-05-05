@@ -439,3 +439,73 @@ function lambda( func, ... )
 	return function() func(unpack(args)) end
 end
 
+--| 							|--
+--| Designer.formatString
+--| 							
+--| 	Converts a keyword wrapped in % signs to either the code behind it or the output
+--| of that code
+--| 							|--
+local percentSignPattern = "%%[^%%]+%%"
+function Designer.formatString( str, bExecute )
+
+	-- Make sure this string has the placeholder char in it
+	if string.find( str, "%%" ) then
+	
+		-- Find all matches that resemble %whatever%
+		local iter = string.gmatch( str, percentSignPattern )
+		
+		-- Iterate through each of them
+		for placeholder in iter do
+		
+			-- Grab the location of the placeholder in the original string
+			local startIndex, endIndex = string.find( str, placeholder, 1, true )
+			
+			-- Grab that section 
+			local subString = string.sub( str, startIndex, endIndex )
+			
+			-- We work in lowercase for string matching
+			subString = string.lower(subString)
+			
+			-- Check if there is a substitution for that string
+			local code = Designer.stringSubs[ subString ]
+			
+			if code then
+				
+				-- This returns just the code for exporting to Lua
+				if !bExecute then
+					return code
+				end
+				
+				-- This method is definitely not my preferred way of handling anything but gLua does not have
+				-- loadstring and RunString doesn't return any values from the executed code so 
+				-- this is my only decent option 
+				Designer.runtimeVars = Designer.runtimeVars or {}
+				
+				-- Store the results of the substitution code in a table
+				code = string.format("Designer.runtimeVars['%s'] = tostring(%s)", subString, code )
+				
+				-- Run the code
+				local err = RunString( code, "Designer", true )
+				
+				local subValue
+				
+				if err then
+					print(ERR)
+					subValue = "[LUA ERROR] CHECK CONSOLE"
+				else
+					subValue = Designer.runtimeVars[subString]
+				end
+				
+				-- Grab the preceding string and following string
+				local front = string.sub( str, 1, startIndex - 1 )
+				local back = string.sub( str, endIndex + 1 )
+				
+				-- Merge it together
+				str = front .. subValue .. back
+			end
+		end
+	end
+	
+	return str
+end
+

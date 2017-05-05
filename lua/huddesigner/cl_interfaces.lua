@@ -741,7 +741,6 @@ function Designer.guiFontEditor()
 		checkboxLabel:SetValue( val )
 		checkboxLabel:SizeToContents()	
 		checkboxLabel.OnChange = function( self )
-			print("Update", self:GetText())
 			updateFont()
 		end
 		
