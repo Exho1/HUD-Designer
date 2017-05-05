@@ -8,6 +8,9 @@ Designer = Designer or {}
 --| 							|--
 function Designer.registerStringSub( printName, placeholder, code )
 	
+	Designer.stringFormats = Designer.stringFormats or {}
+	Designer.stringSubs = Designer.stringSubs or {}
+	
 	Designer.stringFormats[ printName ] = string.lower(placeholder)
 	Designer.stringSubs[string.lower(placeholder)] = code
 	
@@ -21,6 +24,17 @@ Designer.registerStringSub( "[TTT] Role", "%ttt_role%", "L[LocalPlayer():GetRole
 Designer.registerStringSub( "[RP] Job", "%rp_job%", 'DarkRP.getPhrase("salary", DarkRP.formatMoney(lp:getDarkRPVar("salary")), "")')
 Designer.registerStringSub( "[RP] Cash", "%rp_cash%", 'DarkRP.getPhrase("job", lp:getDarkRPVar("job") or "")')
 Designer.registerStringSub( "[RP] Salary", "%rp_salary%", 'DarkRP.getPhrase("wallet", DarkRP.formatMoney(localplayer:getDarkRPVar("money")), "")')
+
+function Designer.layerCount()
+	
+	local i = 0
+	for layerNum, layerContents in pairs( Designer.canvasElements ) do
+		i = i + 1
+	end
+	
+	return i
+	
+end
 
 --| 							|--
 --| Designer.projectModified
@@ -508,8 +522,6 @@ function Designer.formatString( str, bExecute )
 				
 				-- Run the code
 				local err = RunString( code, "Designer", false )
-				
-				print(err)
 				
 				-- It will return the result of the code OR the placeholder string if the result is nil
 				local subValue = Designer.runtimeVars[subString] or placeholder

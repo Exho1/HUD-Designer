@@ -4,7 +4,7 @@ Designer = Designer or {}
 	Regarding popup panels for editing:
 		- Frame close does NOT save changes, revert to original (if not locally saved)
 		- Apply button (if visible) will just demo the changes
-		- Save button will locally save changes and apply them
+		- Save button will locally save changes and apply them then close
 		- Undo button will undo the most last change
 	
 
@@ -98,7 +98,7 @@ function Designer.buildMenuBar( parent )
 	
 	-- Update the text
 	pnl.Think = function( self ) 
-		self:SetText( "Current layer: " .. tostring(Designer.currentLayer) )
+		self:SetText( "Current layer: " .. tostring(Designer.currentLayer).. "/" .. Designer.layerCount() )
 	end
 	
 	M3:AddSpacer()
@@ -187,6 +187,12 @@ function Designer.guiRightClick( parent )
 				subMenu:AddOption( "Open Material Selector", Designer.guiMatSelector ):SetImage( "icon16/picture_edit.png" )
 				subMenu:AddSpacer()
 				subMenu:AddOption( "Remove Material" , lambda( Designer.materialShape, nil ) ):SetImage( "icon16/picture_delete.png" )
+				
+				
+			local subMenu = menu:AddSubMenu( "Function" )
+				subMenu:AddOption( "Open Function Selector", Designer.guiFunctionCreator ):SetImage( "icon16/cog_add.png" )
+				subMenu:AddSpacer()
+				subMenu:AddOption( "Remove Function" ):SetImage( "icon16/cog_delete.png" )
 				--subMenu:AddSpacer()
 		end
 	end
@@ -401,6 +407,12 @@ function Designer.guiColorPicker()
 		--shape.color = mixer:GetColor()
 		
 		saved = true
+		
+		local parent = pnl:GetParent()
+		
+		if IsValid( parent ) then
+			parent:Close()
+		end
 		--frame:Close()
 	end
 
@@ -554,7 +566,13 @@ function Designer.guiTextEditor()
 		
 		saved = true
 		Designer.changeText( stringEntry:GetText() )
-	
+		
+		local parent = rightPnl:GetParent()
+		
+		if IsValid( parent ) then
+			parent:Close()
+		end
+		
 	end
 
 end
@@ -786,7 +804,19 @@ function Designer.guiFontEditor()
 		
 		Designer.print( "Created font under name: "..nombreDeFuente, "notify" )
 		createFontFromEditor( nombreDeFuente )
+		
+		local parent = self:GetParent()
+		
+		if IsValid( parent ) then
+			parent:Close()
+		end
 	end
+end
+
+
+function Designer.guiFunctionCreator()
+	
+
 end
 
 --| 							|--

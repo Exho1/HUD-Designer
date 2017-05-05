@@ -116,6 +116,11 @@ function Designer.exportProject()
 		return "Color( " .. s .. " )"
 	end
 	
+	if Designer.isCanvasEmpty() then
+		Designer.print( "Canvas is empty, not exporting", "notify" )
+		return
+	end
+	
 	for layerNum, layerContents in pairs( Designer.canvasElements ) do
 		for k, data in pairs( layerContents ) do
 			-- Add a line for readability
@@ -240,7 +245,9 @@ function Designer.saveCanvasToFile( bAutosave, bSilent, funcCallback )
 	
 	Designer.projectSaved = true
 	
-	funcCallback()
+	if funcCallback then
+		funcCallback()
+	end
 	
 	if not bSilent then
 		Designer.print( "Saved to " .. path, "notify" )
