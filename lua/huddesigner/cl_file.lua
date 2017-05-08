@@ -127,20 +127,7 @@ function Designer.exportProject()
 			append("")
 			
 			-- Scale the coords back to the screen size
-			local x = math.floor(data.x * Designer.canvasConst.wratio)
-			local y = math.floor(data.y * Designer.canvasConst.hratio)
-			
-			-- Snap to grid 
-			x, y = Designer.snapToGrid( x, y )
-			
-			local w, h
-			
-			if data.w and data.h then
-				w = math.floor(data.w * Designer.canvasConst.wratio)
-				h = math.floor(data.h * Designer.canvasConst.hratio)
-				
-				w, h = Designer.snapToGrid( w, h )
-			end
+			Designer.designerToScreenDim( data.x, data.y, data.w, data.h )
 			
 			-- Convert our data into Lua
 			if data.type == "rect" then
@@ -329,20 +316,20 @@ function Designer.loadLegacyFormat( tbl )
 				class = string.lower(class)
 				
 				-- Align the x and y values to the new canvas
-				local x = math.floor(data.x / Designer.canvasConst.wratio)
-				local y = math.floor(data.y / Designer.canvasConst.hratio)
+				--local x = math.floor(data.x / Designer.canvasConst.wratio)
+				--local y = math.floor(data.y / Designer.canvasConst.hratio)
+				
+				Designer.screenToDesignerDim( data.x, data.y, data.w, data.h )
 				
 				-- Make sure the color exists otherwise errors will occur
 				local col = Color( data.color.r or 255, data.color.g or 255, data.color.b or 255, data.color.a )
 				
 				if class == "draw.roundedbox" then
-					local w = data.width / Designer.canvasConst.wratio
-					local h = data.height / Designer.canvasConst.wratio
+					--local w = data.width / Designer.canvasConst.wratio
+					--local h = data.height / Designer.canvasConst.wratio
 					
 					Designer.addRect( x, y, w, h, col, i, data.corner )
 				elseif class == "draw.drawtext" then
-					-- TODO: Handle the data.format string
-					
 					Designer.addText( x, y, data.font, data.text, col, i )
 				elseif class == "surface.DrawTexturedRect" then
 					-- TODO: Convert textured rect

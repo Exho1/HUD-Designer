@@ -11,6 +11,7 @@ Designer = Designer or {}
 	- Option to scale HUDs based on screensize created within the editor
 	- Option to remove certain default HUD parts
 	- Finish touching up the workflow parts 
+	- Hud Demo
 
 ]]
 

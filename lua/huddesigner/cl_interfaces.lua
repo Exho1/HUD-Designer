@@ -104,7 +104,9 @@ function Designer.buildMenuBar( parent )
 	M3:AddSpacer()
 	M3:AddOption("Move view up 1 layer", function() Designer.viewLayer( Designer.currentLayer + 1 ) end):SetImage( "icon16/arrow_up.png" )
 	M3:AddOption("Move view down 1 layer", function() Designer.viewLayer( Designer.currentLayer - 1 ) end):SetImage( "icon16/arrow_down.png" )
-
+	M3:AddSpacer()
+	M3:AddOption("Demo HUD", Designer.hudDemo )
+	
 	local M4 = parent:AddMenu( "Options" )
 	M4:AddOption( "Open Canvas Settings", Designer.guiCanvasSettings )
 	M4:AddSpacer()
@@ -215,6 +217,18 @@ function Designer.guiRightClick( parent )
 	-- Position the menu
 	local x, y = Designer.getMousePos( parent )
 	menu:SetPos( x + 5, y )
+
+end
+
+--| 							|--
+--| Designer.hudDemo
+--| 							
+--| 
+--| 							|--
+function Designer.hudDemo()
+
+	print("Demo HUD")
+	-- TODO
 
 end
 

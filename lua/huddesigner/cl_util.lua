@@ -1,6 +1,57 @@
 Designer = Designer or {}
 
 --| 							|--
+--| Designer.designerToScreenDim
+--| 							
+--| Converts the given position and size to an acceptable screen size
+--| 							|--
+function Designer.designerToScreenDim( x, y, w, h )
+	
+	-- Scale the coords back to the screen size
+	local x = math.floor(x * Designer.canvasConst.wratio)
+	local y = math.floor(y * Designer.canvasConst.hratio)
+	
+	-- Snap to grid 
+	--x, y = Designer.snapToGrid( x, y )
+	
+	local w, h
+	
+	if w and h then
+		w = math.floor(w * Designer.canvasConst.wratio)
+		h = math.floor(h * Designer.canvasConst.hratio)
+		
+		--w, h = Designer.snapToGrid( w, h )
+	end
+	
+	return x, y, w, h
+
+end
+
+--| 							|--
+--| Designer.screenToDesignerDim
+--|				
+--| 	Converts the given position and size to an approximate for the designer.
+--| Some accuracy is lost due to the grid and rounding process
+--| 							|--
+function Designer.screenToDesignerDim( x, y, w, h )
+
+	local x = math.floor(x / Designer.canvasConst.wratio)
+	local y = math.floor(y / Designer.canvasConst.hratio)
+	
+	x, y = Designer.snapToGrid( x, y )
+	
+	if w and h then 
+		local w = width / Designer.canvasConst.wratio
+		local h = height / Designer.canvasConst.wratio
+		
+		w, h = Designer.snapToGrid( w, h )
+	end
+	
+	return x, y, w, h
+	
+end
+
+--| 							|--
 --| Designer.registerStringSub
 --| 							
 --| Creates a substitution option where the user can select a formatted string and it will
