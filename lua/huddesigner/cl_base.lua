@@ -12,7 +12,17 @@ Designer = Designer or {}
 	- Option to remove certain default HUD parts
 	- Finish touching up the workflow parts 
 	- Hud Demo
-
+	- Fix copy/paste
+	
+	local hud = {"CHudHealth", "CHudBattery", "CHudAmmo", "CHudSecondaryAmmo"}
+	hook.Add( "HUDShouldDraw", "hide hud", function( name )
+		if HD.DesignerOpen then
+			for k, v in pairs(hud) do
+				if name == v then return false end
+			end
+		end
+	end)
+	
 ]]
 
 --| 							|--
@@ -125,89 +135,29 @@ end
 --| 							
 --| Draws all of the shapes on the canvas
 --| 							|--
-local selectionColor = 255
-local goal = 0
-function Designer.renderCanvas( )
+function Designer.renderCanvas( bHideSelectionBox, bRenderOffCanvas )
 
 	if not Designer.canvasElements then return end
 	
+	-- Default to false
+	bRenderOffCanvas = bRenderOffCanvas or false
+	
 	local shape = Designer.getSelectedShape()
 	
-	-- Begins the drawing process
+	-- Iterate through each of the layers
 	for layerNum, layerContents in pairs( Designer.canvasElements ) do
-		-- Draw each shape within each layer
+	
+		-- Iterate through each shape on the given layer
 		for k, data in pairs( layerContents ) do
-			data.color = data.color or color_white
 			
-			local drawColor = data.color
+			-- Pass that information to our shape drawing function
+			-- Last argument is false because this is on the canvas
+			Designer.drawShape( data, layerNum, bRenderOffCanvas )
 			
-			-- Draw shapes from other layers at a transparency
-			if layerNum != Designer.currentLayer then
-				drawColor = Designer.colorAlpha( drawColor, 200 )
-			end
-			
-			surface.SetDrawColor( drawColor )
-			
-			-- Draw rectangles
-			if data.type == "rect" then
-				if isnumber(data.special[1]) then
-					draw.RoundedBox( data.special[1], data.x, data.y, data.w, data.h, data.color )
-				elseif data.special[2] then
-					surface.SetMaterial( data.special[2] )
-					surface.DrawTexturedRect( data.x, data.y, data.w, data.h )
-				else
-					surface.DrawRect( data.x, data.y, data.w, data.h )
-				end
-			elseif data.type == "text" then
-				--local tbl = {type="text", x=x, y=y, font=font, text=text, color=color, xalign=xAlign}
-				
-				local drawnText = Designer.formatString( data.text, true ) 
-				
-				if data.xalign then
-					draw.DrawText( drawnText, data.font, data.x, data.y, data.color, data.xalign) 
-				else
-					
-					surface.SetFont( data.font )
-					surface.SetTextColor( Designer.unpackColor( data.color ) )
-					surface.SetTextPos( data.x, data.y )
-					surface.DrawText( drawnText )
-				end
-				
-			end
-			
-			-- If we have selected a shape, draw helpers
-			-- TODO: Put this in a function of its own and add a toggle
-			if shape then
-				if data.id == shape.id then
-					
-					local d = FrameTime() * 15
-
-					if selectionColor > 253 then
-						goal = 0
-					elseif selectionColor < 20 then
-						goal = 255
-					end
-					
-					-- Make the colors flash a little 
-					selectionColor = Lerp( d, selectionColor, goal )
-					surface.SetDrawColor( Color( selectionColor, selectionColor, selectionColor, 230 ) )	
-					
-					-- Draw the selection elements
-					local hBoxes, dBoxes = Designer.getSelectionBoxPositions()
-					
-					for _, tbl in pairs( hBoxes ) do
-						surface.DrawRect( tbl[1], tbl[2], tbl[3], tbl[4] )
-					end
-					
-					if data.type != "text" then
-						-- Inverted colors
-						--local col = 255 - selectionColor
-						--surface.SetDrawColor( Color( col, col, col, 230 ) )
-						
-						for _, tbl in pairs( dBoxes ) do
-							surface.DrawRect( tbl[1], tbl[2], tbl[3], tbl[4] )
-						end
-					end
+			if not bHideSelectionBox then
+				-- Check to see if we have selected a shape and if our current iteration is on that one
+				if shape and data.id == shape.id then
+					Designer.drawSelectionBox( data )
 				end
 			end
 		end

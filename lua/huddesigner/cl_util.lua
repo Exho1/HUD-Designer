@@ -1,5 +1,100 @@
 Designer = Designer or {}
 
+
+--| 							|--
+--| Designer.drawShape
+--| 							
+--| Contains the drawing code for each shape in the designer
+--| Optional third argument to convert to screen dimensions
+--| 							|-
+function Designer.drawShape( data, layer, bRenderOffCanvas )
+
+	data.color = data.color or color_white
+	
+	local drawColor = data.color
+	
+	-- Draw shapes from other layers at a transparency
+	if layer != Designer.currentLayer then
+		drawColor = Designer.colorAlpha( drawColor, 200 )
+	end
+	
+	surface.SetDrawColor( drawColor )
+	
+	local x, y = data.x, data.y
+	local w, h = data.w, data.h 
+	
+	if bRenderOffCanvas == true then
+		Designer.designerToScreenDim( x, y, w, h )
+	end
+	
+	if data.type == "rect" then
+		if isnumber(data.special[1]) then
+			draw.RoundedBox( data.special[1], x, y, w, h, data.color )
+		elseif data.special[2] then
+			surface.SetMaterial( data.special[2] )
+			surface.DrawTexturedRect( x, y, w, h )
+		else
+			surface.DrawRect( x, y, w, h )
+		end
+	elseif data.type == "text" then
+		--local tbl = {type="text", x=x, y=y, font=font, text=text, color=color, xalign=xAlign}
+		
+		local drawnText = Designer.formatString( data.text, true ) 
+		
+		if data.xalign then
+			draw.DrawText( drawnText, data.font, x, y, data.color, data.xalign) 
+		else
+			
+			surface.SetFont( data.font )
+			surface.SetTextColor( Designer.unpackColor( data.color ) )
+			surface.SetTextPos( x, y )
+			surface.DrawText( drawnText )
+		end
+		
+	end
+	
+end
+
+--| 							|--
+--| Designer.drawSelectionBox
+--| 							
+--| 
+--| 							|--
+local selectionColor = 255
+local goal = 0
+function Designer.drawSelectionBox( data )
+
+	local d = FrameTime() * 15
+
+	if selectionColor > 253 then
+		goal = 0
+	elseif selectionColor < 20 then
+		goal = 255
+	end
+	
+	-- Make the colors flash a little 
+	selectionColor = Lerp( d, selectionColor, goal )
+	surface.SetDrawColor( Color( selectionColor, selectionColor, selectionColor, 230 ) )	
+	
+	-- Draw the selection elements
+	local hBoxes, dBoxes = Designer.getSelectionBoxPositions()
+	
+	for _, tbl in pairs( hBoxes ) do
+		surface.DrawRect( tbl[1], tbl[2], tbl[3], tbl[4] )
+	end
+	
+	if data.type != "text" then
+		-- Inverted colors
+		--local col = 255 - selectionColor
+		--surface.SetDrawColor( Color( col, col, col, 230 ) )
+		
+		for _, tbl in pairs( dBoxes ) do
+			surface.DrawRect( tbl[1], tbl[2], tbl[3], tbl[4] )
+		end
+	end
+	
+end
+
 --| 							|--
 --| Designer.designerToScreenDim
 --| 							
@@ -8,13 +103,18 @@ Designer = Designer or {}
 function Designer.designerToScreenDim( x, y, w, h )
 	
 	-- Scale the coords back to the screen size
+	--local x = math.floor(x * Designer.canvasConst.wratio)
+	--local y = math.floor(y * Designer.canvasConst.hratio)
+	
+	local consts = Designer.canvasConst
+	
 	local x = math.floor(x * Designer.canvasConst.wratio)
 	local y = math.floor(y * Designer.canvasConst.hratio)
 	
 	-- Snap to grid 
 	--x, y = Designer.snapToGrid( x, y )
 	
-	local w, h
+	--local w, h
 	
 	if w and h then
 		w = math.floor(w * Designer.canvasConst.wratio)

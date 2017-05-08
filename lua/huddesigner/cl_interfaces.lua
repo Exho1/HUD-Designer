@@ -229,7 +229,31 @@ function Designer.hudDemo()
 
 	print("Demo HUD")
 	-- TODO
-
+	
+	Designer.frame:SetVisible( false ) 
+	
+	Designer.print( "Type !enddemo to return" )
+	
+	hook.Add( "OnPlayerChat", "Designer.leaveDemo", function( ply, text )
+		
+		local cmd = "!enddemo"
+		
+		if string.sub( text, 1, string.len(cmd) ):lower() == cmd:lower()  then 
+			
+			Designer.frame:SetVisible( true ) 
+			
+			hook.Remove( "HUDPaint", "Designer.Demo" )
+			
+		end
+	
+	end)
+	
+	hook.Add( "HUDPaint", "Designer.Demo", function()
+		
+		Designer.renderCanvas( true )
+	
+	end)
+	
 end
 
 --| 							|--
