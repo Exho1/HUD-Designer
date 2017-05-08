@@ -8,7 +8,7 @@ Designer = Designer or {}
 	- Save fonts?
 		- Saved with the project or seperately
 	- Ammo and health bars
-	- Option to scale HUDs created within the editor
+	- Option to scale HUDs based on screensize created within the editor
 	- Option to remove certain default HUD parts
 	- Finish touching up the workflow parts 
 
@@ -65,6 +65,9 @@ function Designer.initializeVars()
 		["[GMD] Ammo Current"] = "%ammo_c%",
 		["[GMD] Ammo Reserve"] = "%ammo_r%",
 		["[GMD] Armor"] = "%armor%",
+		["[GMD] SteamID"] = "%steamid%",
+		["[GMD] Velocity"] = "%velocity%",
+		-- Add new ones using the function below
 	}
 	
 	Designer.stringSubs = Designer.stringSubs or {
@@ -76,8 +79,21 @@ function Designer.initializeVars()
 		["%ammo_c%"] = "LocalPlayer():GetActiveWeapon().Clip1()",
 		["%ammo_r%"] = "LocalPlayer():GetActiveWeapon().Ammo1()",
 		["%armor%"] = "LocalPlayer():Armor()",
+		["%steamid%"] = "LocalPlayer():SteamID()",
+		["%velocity%"] = "LocalPlayer():GetVelocity():Length()",
 	
 	}
+	
+	-- Custom string substitutions for the editor
+	-- (If an error occurs with the code, it'll just display the placeholder) 
+	Designer.registerStringSub( "[TTT] Round State", "%ttt_round%", "L[ roundstate_string[GAMEMODE.round_state] ]" )
+	Designer.registerStringSub( "[TTT] Round Time", "%ttt_time%", 'util.SimpleTime(math.max(0, GetGlobalFloat("ttt_round_end", 0) - CurTime()), "%02i:%02i")')
+	Designer.registerStringSub( "[TTT] Role", "%ttt_role%", "L[LocalPlayer():GetRoleStringRaw()]")
+
+	Designer.registerStringSub( "[RP] Job", "%rp_job%", 'DarkRP.getPhrase("salary", DarkRP.formatMoney(lp:getDarkRPVar("salary")), "")')
+	Designer.registerStringSub( "[RP] Cash", "%rp_cash%", 'DarkRP.getPhrase("job", lp:getDarkRPVar("job") or "")')
+	Designer.registerStringSub( "[RP] Salary", "%rp_salary%", 'DarkRP.getPhrase("wallet", DarkRP.formatMoney(localplayer:getDarkRPVar("money")), "")')
+
 	
 	Designer.shapeID = 1;
 	Designer.currentLayer = 1;
@@ -1089,7 +1105,6 @@ function Designer.openDesigner()
 			-- Selects whatever shape is under the menu at the time
 			Designer.selectShapeAt( mx, my )
 			
-			-- Opens the right click menu
 			Designer.guiRightClick( self )
 		end
 	end

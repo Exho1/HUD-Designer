@@ -8,23 +8,16 @@ Designer = Designer or {}
 --| 							|--
 function Designer.registerStringSub( printName, placeholder, code )
 	
-	Designer.stringFormats = Designer.stringFormats or {}
-	Designer.stringSubs = Designer.stringSubs or {}
-	
 	Designer.stringFormats[ printName ] = string.lower(placeholder)
 	Designer.stringSubs[string.lower(placeholder)] = code
 	
 end
 
--- String substitutions and all that jazz, custom ones can be added below
--- If an error occurs with the code, it'll just display the placeholder. 
-Designer.registerStringSub( "[TTT] Round State", "%ttt_round%", "L[ roundstate_string[GAMEMODE.round_state] ]" )
-Designer.registerStringSub( "[TTT] Round Time", "%ttt_time%", 'util.SimpleTime(math.max(0, GetGlobalFloat("ttt_round_end", 0) - CurTime()), "%02i:%02i")')
-Designer.registerStringSub( "[TTT] Role", "%ttt_role%", "L[LocalPlayer():GetRoleStringRaw()]")
-Designer.registerStringSub( "[RP] Job", "%rp_job%", 'DarkRP.getPhrase("salary", DarkRP.formatMoney(lp:getDarkRPVar("salary")), "")')
-Designer.registerStringSub( "[RP] Cash", "%rp_cash%", 'DarkRP.getPhrase("job", lp:getDarkRPVar("job") or "")')
-Designer.registerStringSub( "[RP] Salary", "%rp_salary%", 'DarkRP.getPhrase("wallet", DarkRP.formatMoney(localplayer:getDarkRPVar("money")), "")')
-
+--| 							|--
+--| Designer.layerCount
+--| 							
+--| Returns the amount of layers 
+--| 							|--
 function Designer.layerCount()
 	
 	local i = 0
