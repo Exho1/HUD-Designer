@@ -146,7 +146,6 @@ function Designer.renderCanvas( bHideSelectionBox, bRenderOffCanvas )
 	
 	-- Iterate through each of the layers
 	for layerNum, layerContents in pairs( Designer.canvasElements ) do
-	
 		-- Iterate through each shape on the given layer
 		for k, data in pairs( layerContents ) do
 			
