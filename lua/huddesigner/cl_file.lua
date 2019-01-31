@@ -83,7 +83,6 @@ end
 --| Exports the current project to Lua code in a text file
 --| 							|--
 function Designer.exportProject()
-	
 	print("Export project")
 	
 	local strExportedText = ""
@@ -91,7 +90,7 @@ function Designer.exportProject()
 	-- Helper function to add a line of code to our exported text
 	local function append( str )
 		strExportedText = strExportedText .. tostring(str) .. "\r\n"
-		print("Appending: ", str )
+		--print("Appending: ", str )
 	end
 	
 	-- Helper function to concatenate arguments into a comma-seperated string
@@ -120,14 +119,17 @@ function Designer.exportProject()
 		Designer.print( "Canvas is empty, not exporting", "notify" )
 		return
 	end
-	
+
 	for layerNum, layerContents in pairs( Designer.canvasElements ) do
 		for k, data in pairs( layerContents ) do
 			-- Add a line for readability
 			append("")
 			
+			local x, y, w, h = data.x, data.y, data.w, data.h
+			if !(x or y or w or h) then continue end
+			
 			-- Scale the coords back to the screen size
-			Designer.designerToScreenDim( data.x, data.y, data.w, data.h )
+			Designer.designerToScreenDim( x, y, w, h )
 			
 			-- Convert our data into Lua
 			if data.type == "rect" then
@@ -163,7 +165,7 @@ function Designer.exportProject()
 					-- Its aligned text
 					local strFunc = "draw.DrawText"
 					
-					local strArgs = stringArgs( data.text, "'" .. data.font .. "'", x, y, data.color, data.xalign )
+					local strArgs = stringArgs( data.text, "'" .. data.font .. "'", x, y, stringColor(data.color), data.xalign )
 					
 					append( strFunc .. "( " .. strArgs .. " )" )
 				else

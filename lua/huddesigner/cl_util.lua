@@ -402,6 +402,10 @@ function math.SnapTo(num, point)
 	
 end
 
+function math.IsDivisible(divisor, dividend)
+	return divisor%dividend == 0
+end
+
 --| 							|--
 --| Designer.getMousePos
 --| 							
